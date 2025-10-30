@@ -109,20 +109,23 @@ class QuickSED:
         
         sc = 1e3*1e26*(1./(self.dstar*pc)**2)*(self.sed_wave*um)**2 /c
         
-        ax.loglog(self.sed_wave, self.sed_star*sc, color='grey',linestyle=':')        
+        ax.loglog(self.sed_wave, self.sed_star*sc, color='grey',linestyle=':',label='Stellar model')
         for i in range(0, self.ndisc):
-            ax.loglog(self.sed_wave, self.sed_disc[i]*sc, color='grey',linestyle='--')
-        ax.loglog(self.sed_wave, (self.sed_star + self.sed_total)*sc, color='black',linestyle='-')
+            ax.loglog(self.sed_wave, self.sed_disc[i]*sc, color='grey',linestyle='--',label='Mod. BB '+str(i+1))
+        ax.loglog(self.sed_wave, (self.sed_star + self.sed_total)*sc, color='black',linestyle='-',label='Total')
         if self.obsv == True:
-            ax.errorbar(self.owav,self.oflx,yerr=self.ounc,marker='o',color='black',linestyle='')
-        ax.set_xlabel(r'$\lambda$ ($\mu$m)')
+            ax.errorbar(self.owav,self.oflx,yerr=self.ounc,marker='o',color='black',linestyle='',label='Data')
+        ax.set_xlabel(r'Wavelength ($\mu$m)')
         ax.set_ylabel(r'Flux density (mJy)')
         ax.set_xlim(self.wave_min,self.wave_max)
         if np.max(self.sed_star*sc) > np.max((self.sed_total*sc)):
             ax.set_ylim(10**(np.log10(np.max((self.sed_disc*sc))) - 6),10**(np.log10(np.max(self.sed_star*sc)) + 1))
         else:
-            ax.set_ylim(10**(np.log10(np.max(self.sed_star*sc)) - 6),10**(np.log10(np.max((self.sed_disc*sc))) + 1))    
+            ax.set_ylim(10**(np.log10(np.max(self.sed_star*sc)) - 6),10**(np.log10(np.max((self.sed_disc*sc))) + 1))
+        ax.legend()
+        plt.tight_layout()
         fig.savefig(self.directory+self.prefix+'_QuickSED.png',dpi=200)
+        #plt.show()
         plt.close(fig)
         
         self.sed_plot = fig
@@ -135,7 +138,7 @@ class QuickSED:
         Parameters
         ----------
         units : TYPE, optional
-            Units of flux - either mJy or Jy. Jy will * 10^3 for conversion. The default is 'mJy'.        
+            Units of flux - either mJy or Jy. Jy will * 10^3 for conversion. The default is 'mJy'.
 
         """
         from astropy.io import ascii

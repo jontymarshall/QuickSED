@@ -147,12 +147,11 @@ def mcmc_results(sampler,ndim,percentiles=[16, 50, 84],burnin=200,labels="",pref
     
     QuickSED.wave(model)
     QuickSED.star(model)
-    QuickSED.disc(model)      
+    QuickSED.disc(model)
     QuickSED.plot(model)
 
-
-nwalkers = 100
-nsteps = 100
+nwalkers = 20
+nsteps = 1000
 nburn = int(0.8*nsteps)
 
 if model.ndisc == 1 :
